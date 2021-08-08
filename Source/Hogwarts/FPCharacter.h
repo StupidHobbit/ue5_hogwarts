@@ -8,6 +8,7 @@
 
 class UInputComponent;
 class USkeletalMeshComponent;
+class UStaticMeshComponent;
 class USceneComponent;
 class UCameraComponent;
 class UMotionControllerComponent;
@@ -24,15 +25,15 @@ class HOGWARTS_API AFPCharacter : public ACharacter
 	USkeletalMeshComponent* Mesh1P;
 
 	/** Gun mesh: 1st person view (seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USkeletalMeshComponent* FP_Gun;
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	UStaticMeshComponent* FP_Gun;
 
 	/** Location on gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	UPROPERTY(EditAnywhere, Category = Mesh)
 	USceneComponent* FP_MuzzleLocation;
 
 	/** First person camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
 public:
