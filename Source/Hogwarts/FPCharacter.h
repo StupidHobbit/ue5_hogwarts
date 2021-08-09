@@ -14,6 +14,7 @@ class UCameraComponent;
 class UMotionControllerComponent;
 class UAnimMontage;
 class USoundBase;
+struct FTimerHandle;
 
 UCLASS(config = Game)
 class HOGWARTS_API AFPCharacter : public ACharacter
@@ -35,6 +36,8 @@ class HOGWARTS_API AFPCharacter : public ACharacter
 	/** First person camera */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
+
+	FTimerHandle SpellTimerHandle;
 
 public:
 	AFPCharacter();
@@ -71,9 +74,11 @@ public:
 	UAnimMontage* FireAnimation;
 
 protected:
+	void OnFire();
 
 	/** Fires a projectile. */
-	void OnFire();
+	UFUNCTION()
+	void CastSpell();
 
 	void OnAim();
 

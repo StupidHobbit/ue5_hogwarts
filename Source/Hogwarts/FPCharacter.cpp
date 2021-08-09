@@ -99,8 +99,26 @@ void AFPCharacter::OnAim() {
 	IsAiming = true;
 }
 
+void AFPCharacter::OnFire() {
+	IsAiming = false;
 
-void AFPCharacter::OnFire()
+	if (GetWorldTimerManager().IsTimerActive(SpellTimerHandle)) return;
+
+	// try and play a firing animation if specified
+	if (FireAnimation != nullptr)
+	{
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+		if (AnimInstance != nullptr)
+		{
+			auto animTime = AnimInstance->Montage_Play(FireAnimation, 1.f);
+			GetWorld()->GetTimerManager().SetTimer(SpellTimerHandle, this, &AFPCharacter::CastSpell, animTime, false);
+		}
+	}
+}
+
+
+void AFPCharacter::CastSpell()
 {
 	// try and fire a projectile
 	if (ProjectileClass != nullptr)
@@ -126,19 +144,6 @@ void AFPCharacter::OnFire()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 	}
-
-	// try and play a firing animation if specified
-	if (FireAnimation != nullptr)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != nullptr)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		}
-	}
-
-	IsAiming = false;
 }
 
 void AFPCharacter::MoveForward(float Value)
