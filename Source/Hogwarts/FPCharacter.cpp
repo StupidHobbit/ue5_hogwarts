@@ -52,7 +52,7 @@ AFPCharacter::AFPCharacter()
 }
 
 // Called when the game starts or when spawned
-void AFPCharacter::BeginPlay()
+void AFPCharacter::BeginPlay()	
 {
 	Super::BeginPlay();
 
@@ -62,6 +62,7 @@ void AFPCharacter::BeginPlay()
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 	FP_Gun->SetRelativeRotation(rot);
 	FP_Gun->SetRelativeLocation(FVector(1.048611, 7.643913, 1.207432));
+	IsAiming = false;
 }
 
 
@@ -77,7 +78,8 @@ void AFPCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFPCharacter::OnAim);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AFPCharacter::OnFire);
 
 	// Enable touchscreen input
 	// Bind movement events
@@ -92,6 +94,11 @@ void AFPCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AFPCharacter::LookUpAtRate);
 }
+
+void AFPCharacter::OnAim() {
+	IsAiming = true;
+}
+
 
 void AFPCharacter::OnFire()
 {
@@ -130,6 +137,8 @@ void AFPCharacter::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+
+	IsAiming = false;
 }
 
 void AFPCharacter::MoveForward(float Value)
